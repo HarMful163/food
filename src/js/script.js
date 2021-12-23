@@ -9,8 +9,8 @@ window.addEventListener('DOMContentLoaded', function() {
 	function hideTabContent() {
         
         tabsContent.forEach(item => {
-            item.classList.add('hide');
             item.classList.remove('show', 'fade');
+            item.classList.add('hide');
         });
 
         tabs.forEach(item => {
@@ -282,4 +282,8 @@ window.addEventListener('DOMContentLoaded', function() {
             closeModal();
         }, 4000);
     }
+
+    fetch('db.json')
+        .then(data => data.json())
+        .then(res => console.log());
 });
