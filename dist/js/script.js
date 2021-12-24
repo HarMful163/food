@@ -141,63 +141,63 @@ window.addEventListener('DOMContentLoaded', function() {
 
     // Используем классы для создание карточек меню
 
-    class MenuCard {
-        constructor(src, alt, title, descr, price, parentSelector, ...classes) {
-            this.src = src;
-            this.alt = alt;
-            this.title = title;
-            this.descr = descr;
-            this.price = price;
-            this.classes = classes;
-            this.parent = document.querySelector(parentSelector);
-            this.transfer = 27;
-            this.changeToUAH(); 
-        }
+    // class MenuCard {
+    //     constructor(src, alt, title, descr, price, parentSelector, ...classes) {
+    //         this.src = src;
+    //         this.alt = alt;
+    //         this.title = title;
+    //         this.descr = descr;
+    //         this.price = price;
+    //         this.classes = classes;
+    //         this.parent = document.querySelector(parentSelector);
+    //         this.transfer = 27;
+    //         this.changeToUAH(); 
+    //     }
 
-        changeToUAH() {
-            this.price = this.price * this.transfer; 
-        }
+    //     changeToUAH() {
+    //         this.price = this.price * this.transfer; 
+    //     }
 
-        render() {
-            const element = document.createElement('div');
+    //     render() {
+    //         const element = document.createElement('div');
 
-            if (this.classes.length === 0) {
-                this.classes = "menu__item";
-                element.classList.add(this.classes);
-            } else {
-                this.classes.forEach(className => element.classList.add(className));
-            }
+    //         if (this.classes.length === 0) {
+    //             this.classes = "menu__item";
+    //             element.classList.add(this.classes);
+    //         } else {
+    //             this.classes.forEach(className => element.classList.add(className));
+    //         }
 
-            element.innerHTML = `
-                <img src=${this.src} alt=${this.alt}>
-                <h3 class="menu__item-subtitle">${this.title}</h3>
-                <div class="menu__item-descr">${this.descr}</div>
-                <div class="menu__item-divider"></div>
-                <div class="menu__item-price">
-                    <div class="menu__item-cost">Цена:</div>
-                    <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
-                </div>
-            `;
-            this.parent.append(element);
-        }
-    }
+    //         element.innerHTML = `
+    //             <img src=${this.src} alt=${this.alt}>
+    //             <h3 class="menu__item-subtitle">${this.title}</h3>
+    //             <div class="menu__item-descr">${this.descr}</div>
+    //             <div class="menu__item-divider"></div>
+    //             <div class="menu__item-price">
+    //                 <div class="menu__item-cost">Цена:</div>
+    //                 <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+    //             </div>
+    //         `;
+    //         this.parent.append(element);
+    //     }
+    // }
 
-    const getResource = async (url) => {
-        const res = await fetch(url);
+    // const getResource = async (url) => {
+    //     const res = await fetch(url);
 
-        if(!res.ok) {
-            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
-        }
+    //     if(!res.ok) {
+    //         throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+    //     }
 
-        return await res.json();
-    }
+    //     return await res.json();
+    // }
 
-    getResource('http://localhost:3000/menu')
-        .then(data => {
-            data.forEach(({img, altimg, title, descr, price}) => {
-                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
-            });
-        });
+    // getResource('http://localhost:3000/menu')
+    //     .then(data => {
+    //         data.forEach(({img, altimg, title, descr, price}) => {
+    //             new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+    //         });
+    //     });
 
     // Forms
 
@@ -276,7 +276,54 @@ window.addEventListener('DOMContentLoaded', function() {
         }, 4000);
     }
 
-    // fetch('http://localhost:3000/menu')
-    //     .then(data => data.json())
-    //     .then(res => console.log(res));
+    //slider 
+
+    const slides = document.querySelectorAll('.offer__slide'),
+          prev = document.querySelector('.offer__slider-prev'),
+          next = document.querySelector('.offer__slider-next'),
+          total = document.querySelector('#total'),
+          current = document.querySelector('#current');
+
+    let slideIndex = 1;
+
+    showSlides(slideIndex);
+
+    if (slides.length < 10) {
+        total.textContent = `0${slides.length}`;
+    } else {
+        total.textContent = slides.length;
+    }
+
+    function showSlides(n) {
+        if (n > slides.length) {
+            slideIndex = 1;
+        }
+
+        if (n < 1) {
+            slideIndex = slides.length;
+        }
+
+        slides.forEach(item => item.style.display = 'none');
+
+        slides[slideIndex -1].style.display = 'block';
+
+        if (slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = slideIndex;
+        }
+    }
+
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    prev.addEventListener('click', () => {
+        plusSlides(-1);
+    });
+
+    next.addEventListener('click', () => {
+        plusSlides(1);
+    });
+
 });
